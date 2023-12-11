@@ -1,7 +1,17 @@
 // Firebase呼び出しのロジック
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:reddit_tutorial/core/providers/firebase_providers.dart';
+
+final authRepositoryProvider = Provider(
+  (ref) => AuthRepository(
+    firestore: ref.read(firestoreProvider),
+    auth: ref.read(authProvider),
+    googleSignIn: ref.read(googleSignInProvider),
+  ),
+);
 
 class AuthRepository {
   // 外部からアクセスできないようにする
