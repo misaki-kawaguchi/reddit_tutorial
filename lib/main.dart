@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/features/auth/login_screen.dart';
 import 'package:reddit_tutorial/firebase_options.dart';
 import 'package:reddit_tutorial/theme/palette.dart';
@@ -10,7 +11,11 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -26,4 +31,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
