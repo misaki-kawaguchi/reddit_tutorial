@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reddit_tutorial/core/common/sign_in_button.dart';
 import 'package:reddit_tutorial/core/constants/constants.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -22,6 +23,28 @@ class LoginScreen extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 30),
+          const Text(
+            'Dive into anything',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 30),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: Image.asset(
+              Constants.loginEmotePath,
+            ),
+          ),
+          const SizedBox(height: 20),
+          const SignInButton(),
         ],
       ),
     );
