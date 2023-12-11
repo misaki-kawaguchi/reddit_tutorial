@@ -16,5 +16,23 @@ class AuthRepository {
   })  : _auth = auth,
         _firestore = firestore,
         _googleSignIn = googleSignIn;
-}
 
+  Future<void> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+      final googleAuth = await googleUser?.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+
+      print(userCredential.user?.email);
+    } catch (e) {
+      print(e);
+    }
+  }
+}
