@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reddit_tutorial/core/constants/constants.dart';
+import 'package:reddit_tutorial/core/constants/firebase_constants.dart';
 import 'package:reddit_tutorial/core/providers/firebase_providers.dart';
 import 'package:reddit_tutorial/models/user_model.dart';
 
@@ -29,6 +30,8 @@ class AuthRepository {
         _firestore = firestore,
         _googleSignIn = googleSignIn;
 
+  CollectionReference get _users => _firestore.collection(FirebaseConstants.usersCollection);
+
   Future<void> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
@@ -51,7 +54,9 @@ class AuthRepository {
         karma: 0,
         awards: [],
       );
-      print(userCredential.user?.email);
+
+      await _users.doc(userCredential.user!.uid).set(userModel.toMap());
+
     } catch (e) {
       print(e);
     }
