@@ -3,7 +3,7 @@ class UserModel {
   final String profilePic;
   final String banner;
   final String uid;
-  final bool isAuthenticated; // id guest or not
+  final bool isAuthenticated; // if guest or not
   final int karma;
   final List<String> awards;
 
@@ -79,13 +79,13 @@ class UserModel {
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      name: map['name'] as String,
-      profilePic: map['profilePic'] as String,
-      banner: map['banner'] as String,
-      uid: map['uid'] as String,
-      isAuthenticated: map['isAuthenticated'] as bool,
-      karma: map['karma'] as int,
-      awards: map['awards'] as List<String>,
+      name: map['name'] ?? '',
+      profilePic: map['profilePic'] ?? '',
+      banner: map['banner'] ?? '',
+      uid: map['uid'] ?? '',
+      isAuthenticated: map['isAuthenticated'] ?? false,
+      karma: map['karma']?.toInt() ?? 0,
+      awards: List<String>.from(map['awards']),
     );
   }
 }
