@@ -21,6 +21,9 @@ dependencies:
   cloud_firestore: ^4.13.5
   firebase_auth: ^4.15.2
 
+  # For Route Management
+  routemaster: ^1.0.1
+
   # For Sign In
   google_sign_in: ^6.1.6
 
