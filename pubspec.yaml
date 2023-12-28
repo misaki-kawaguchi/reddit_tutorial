@@ -30,6 +30,9 @@ dependencies:
   # For State Management
   flutter_riverpod: ^2.4.9
 
+  # For store data in secure storage
+  shared_preferences: ^2.2.2
+
   # For UI
   dotted_border: ^2.1.0
   file_picker: ^6.1.1
