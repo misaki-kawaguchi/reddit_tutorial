@@ -37,6 +37,7 @@ dependencies:
   shared_preferences: ^2.2.2
 
   # For UI
+  any_link_preview: ^3.0.1
   dotted_border: ^2.1.0
   file_picker: ^6.1.1
 
@@ -52,3 +53,8 @@ flutter:
 
   assets:
     - assets/images/
+
+  fonts:
+    - family: MyFlutterApp
+      fonts:
+        - asset: assets/fonts/MyFlutterApp.ttf
