@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/constants/constants.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
+import 'package:reddit_tutorial/features/post/controller/post_controller.dart';
 import 'package:reddit_tutorial/models/post_model.dart';
 import 'package:reddit_tutorial/theme/palette.dart';
 
@@ -13,6 +14,10 @@ class PostCard extends ConsumerWidget {
   }) : super(key: key);
 
   final Post post;
+
+  Future<void> deletePost(WidgetRef ref, BuildContext context) async {
+    ref.read(postControllerProvider.notifier).deletePost(post, context);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -75,7 +80,7 @@ class PostCard extends ConsumerWidget {
                               ),
                               if (post.uid == user.uid)
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () => deletePost(ref, context),
                                   icon: Icon(
                                     Icons.delete,
                                     color: Palette.redColor,
