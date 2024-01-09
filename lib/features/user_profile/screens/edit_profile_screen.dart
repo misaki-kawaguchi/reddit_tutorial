@@ -7,7 +7,7 @@ import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/constants/constants.dart';
 import 'package:reddit_tutorial/core/utils.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
-import 'package:reddit_tutorial/features/user_profile/controller/edit_profile_controller.dart';
+import 'package:reddit_tutorial/features/user_profile/controller/user_profile_controller.dart';
 import 'package:reddit_tutorial/theme/palette.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
