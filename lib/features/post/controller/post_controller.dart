@@ -15,6 +15,11 @@ final userPostsProvider = StreamProvider.family((ref, List<Community> communitie
   return postController.fetchUserPosts(communities);
 });
 
+final getPostByIdProvider = StreamProvider.family((ref, String postId) {
+  final postController = ref.watch(postControllerProvider.notifier);
+  return postController.getPostById(postId);
+});
+
 final postControllerProvider = StateNotifierProvider<PostController, bool>((ref) {
   final postRepository = ref.watch(postRepositoryProvider);
   final storageRepository = ref.watch(storageRepositoryProvider);
@@ -168,5 +173,9 @@ class PostController extends StateNotifier<bool> {
   Future<void> downvote(Post post) async {
     final uid = _ref.read(userProvider)!.uid;
     _postRepository.downvote(post, uid);
+  }
+
+  Stream<Post> getPostById(String postId) {
+    return _postRepository.getPostById(postId);
   }
 }
