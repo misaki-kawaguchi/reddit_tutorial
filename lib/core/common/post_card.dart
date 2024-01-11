@@ -221,10 +221,11 @@ class PostCard extends ConsumerWidget {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
+        const SizedBox(height: 10),
       ],
     );
   }

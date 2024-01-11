@@ -34,6 +34,7 @@ class _CommentsScreenState extends ConsumerState<CommentsScreen> {
               return Column(
                 children: [
                   PostCard(post: data),
+                  const SizedBox(height: 10),
                   TextField(
                     onSubmitted: (val) {},
                     controller: commentController,
