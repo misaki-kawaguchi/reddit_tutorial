@@ -38,7 +38,7 @@ class AuthRepository {
   Stream<User?> get authStateChange => _auth.authStateChanges();
 
   // Future<Either<String, UserModel>>
-  FutureEither<UserModel> signInWithGoogle() async {
+  FutureEither<UserModel> signInWithGoogle(bool isFromLogin) async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
 
@@ -49,7 +49,25 @@ class AuthRepository {
         idToken: googleAuth?.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      UserCredential? userCredential;
+      if (isFromLogin) {
+        userCredential = await _auth.signInWithCredential(credential);
+      } else {
+        try {
+          userCredential = await _auth.currentUser!.linkWithCredential(credential);
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'credential-already-in-use') {
+            // 既存のアカウントに対する処理
+            // 既存のアカウントに対してログインを試みる
+            userCredential = await _auth.signInWithCredential(GoogleAuthProvider.credential(
+              idToken: credential.idToken,
+              accessToken: credential.accessToken,
+            ));
+          } else {
+            rethrow;
+          }
+        }
+      }
 
       UserModel userModel;
       if (userCredential.additionalUserInfo!.isNewUser) {
