@@ -1,6 +1,7 @@
 // Firebase呼び出しのロジック
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -40,36 +41,30 @@ class AuthRepository {
   // Future<Either<String, UserModel>>
   FutureEither<UserModel> signInWithGoogle(bool isFromLogin) async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-
-      final googleAuth = await googleUser?.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
-      );
-
-      UserCredential? userCredential;
-      if (isFromLogin) {
-        userCredential = await _auth.signInWithCredential(credential);
+      UserCredential userCredential;
+      if (kIsWeb) {
+        GoogleAuthProvider googleProvider = GoogleAuthProvider();
+        googleProvider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+        userCredential = await _auth.signInWithPopup(googleProvider);
       } else {
-        try {
+        final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+        final googleAuth = await googleUser?.authentication;
+
+        final credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth?.accessToken,
+          idToken: googleAuth?.idToken,
+        );
+
+        if (isFromLogin) {
+          userCredential = await _auth.signInWithCredential(credential);
+        } else {
           userCredential = await _auth.currentUser!.linkWithCredential(credential);
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'credential-already-in-use') {
-            // 既存のアカウントに対する処理
-            // 既存のアカウントに対してログインを試みる
-            userCredential = await _auth.signInWithCredential(GoogleAuthProvider.credential(
-              idToken: credential.idToken,
-              accessToken: credential.accessToken,
-            ));
-          } else {
-            rethrow;
-          }
         }
       }
 
       UserModel userModel;
+
       if (userCredential.additionalUserInfo!.isNewUser) {
         userModel = UserModel(
           name: userCredential.user!.displayName ?? 'No Name',
@@ -94,7 +89,7 @@ class AuthRepository {
         userModel = await getUserData(userCredential.user!.uid).first;
       }
       return right(userModel);
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       throw e.message!;
     } catch (e) {
       return left(Failure(e.toString()));

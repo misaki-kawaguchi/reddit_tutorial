@@ -4,6 +4,7 @@ import 'package:reddit_tutorial/core/common/loader.dart';
 import 'package:reddit_tutorial/core/common/sign_in_button.dart';
 import 'package:reddit_tutorial/core/constants/constants.dart';
 import 'package:reddit_tutorial/features/auth/controller/auth_controller.dart';
+import 'package:reddit_tutorial/responsive/responsive.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -52,10 +53,11 @@ class LoginScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(8),
                   child: Image.asset(
                     Constants.loginEmotePath,
+                    height: 400,
                   ),
                 ),
                 const SizedBox(height: 20),
-                const SignInButton(),
+                const Responsive(child: SignInButton()),
               ],
             ),
     );
