@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:reddit_tutorial/core/constants/constants.dart';
@@ -103,41 +104,45 @@ class CommunityController extends StateNotifier<bool> {
   Future<void> editCommunity({
     required File? profileFile,
     required File? bannerFile,
+    required Uint8List? profileWebFile,
+    required Uint8List? bannerWebFile,
     required BuildContext context,
     required Community community,
   }) async {
     state = true;
-    if (profileFile != null) {
+    if (profileFile != null || profileWebFile != null) {
       // communities/profile/memes
       final res = await _storageRepository.storeFile(
         path: 'communities/profile',
         id: community.name,
         file: profileFile,
+        webFile: profileWebFile,
       );
       res.fold(
-        (l) => showSnackBar(context, l.message),
-        (r) => community = community.copyWith(avatar: r),
+            (l) => showSnackBar(context, l.message),
+            (r) => community = community.copyWith(avatar: r),
       );
     }
 
-    if (bannerFile != null) {
+    if (bannerFile != null || bannerWebFile != null) {
       // communities/banner/memes
       final res = await _storageRepository.storeFile(
         path: 'communities/banner',
         id: community.name,
         file: bannerFile,
+        webFile: bannerWebFile,
       );
       res.fold(
-        (l) => showSnackBar(context, l.message),
-        (r) => community = community.copyWith(banner: r),
+            (l) => showSnackBar(context, l.message),
+            (r) => community = community.copyWith(banner: r),
       );
     }
 
     final res = await _communityRepository.editCommunity(community);
     state = false;
     res.fold(
-      (l) => showSnackBar(context, l.message),
-      (r) => Routemaster.of(context).pop(),
+          (l) => showSnackBar(context, l.message),
+          (r) => Routemaster.of(context).pop(),
     );
   }
 

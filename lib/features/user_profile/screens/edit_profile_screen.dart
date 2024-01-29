@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reddit_tutorial/core/common/error_text.dart';
@@ -26,6 +27,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   File? bannerFile;
   File? profileFile;
 
+  Uint8List? bannerWebFile;
+  Uint8List? profileWebFile;
   late TextEditingController nameController;
 
   @override
@@ -44,9 +47,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final res = await pickImage();
 
     if (res != null) {
-      setState(() {
-        bannerFile = File(res.files.first.path!);
-      });
+      if (kIsWeb) {
+        setState(() {
+          bannerWebFile = res.files.first.bytes;
+        });
+      } else {
+        setState(() {
+          bannerFile = File(res.files.first.path!);
+        });
+      }
     }
   }
 
@@ -54,9 +63,15 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     final res = await pickImage();
 
     if (res != null) {
-      setState(() {
-        profileFile = File(res.files.first.path!);
-      });
+      if (kIsWeb) {
+        setState(() {
+          profileWebFile = res.files.first.bytes;
+        });
+      } else {
+        setState(() {
+          profileFile = File(res.files.first.path!);
+        });
+      }
     }
   }
 
@@ -66,6 +81,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           bannerFile: bannerFile,
           context: context,
           name: nameController.text.trim(),
+          bannerWebFile: bannerWebFile,
+          profileWebFile: profileWebFile,
         );
   }
 
@@ -128,15 +145,20 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                                 left: 20,
                                 child: GestureDetector(
                                   onTap: selectProfileImage,
-                                  child: profileFile != null
+                                  child: profileWebFile != null
                                       ? CircleAvatar(
-                                          backgroundImage: FileImage(profileFile!),
+                                          backgroundImage: MemoryImage(profileWebFile!),
                                           radius: 32,
                                         )
-                                      : CircleAvatar(
-                                          backgroundImage: NetworkImage(user.profilePic),
-                                          radius: 32,
-                                        ),
+                                      : profileFile != null
+                                          ? CircleAvatar(
+                                              backgroundImage: FileImage(profileFile!),
+                                              radius: 32,
+                                            )
+                                          : CircleAvatar(
+                                              backgroundImage: NetworkImage(user.profilePic),
+                                              radius: 32,
+                                            ),
                                 ),
                               ),
                             ],
